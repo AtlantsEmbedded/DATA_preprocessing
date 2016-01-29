@@ -42,8 +42,8 @@ typedef struct appconfig_s {
 } appconfig_t;
 
 appconfig_t *xml_initialize(char *filename);
-inline appconfig_t *get_appconfig();
-inline void set_appconfig(appconfig_t *config_obj);
+appconfig_t *get_appconfig();
+void set_appconfig(appconfig_t *config_obj);
 
 
 #endif

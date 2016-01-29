@@ -25,8 +25,11 @@ typedef struct shm_output_s{
 	shm_output_options_t options; /*interface options*/
 	
 	int shmid; /*id of the shared memory array*/
-	int feature_vect_count; /*keeps track of the number of samples that have been written in the page*/
 	char* shm_buf; /*pointer to the beginning of the shared buffer*/
+
+	int page_size; /*size of a page of the buffer in bytes*/
+	int total_buffer_size; /*total size of the buffer in bytes*/
+	int current_page; /*id of the current page*/
 
 	int semid; /*id of semaphore set*/
 	struct sembuf *sops; /* pointer to operations to perform */
@@ -41,14 +44,20 @@ typedef struct shm_output_s{
  */
 void* shm_wrt_init(void *options){
 	
-	/*allocate the memory for the shared memory*/
+	/*allocate the memory for the shared memory interface*/
 	shm_output_t* this_shm = (shm_output_t*)malloc(sizeof(shm_output_t));
 	
 	/*copy options*/
 	memcpy(&(this_shm->options),options, sizeof(shm_output_options_t));
+	
+	/*compute a few properties of the buffer*/
+	/*page size*/
+	this_shm->page_size = this_shm->options.nb_features*sizeof(double) + this_shm->options.frame_status_size;
+	/*buffer size*/
+	this_shm->total_buffer_size = this_shm->page_size*this_shm->options.buffer_depth;
 		        
     /*initialise the shared memory array*/
-	if ((this_shm->shmid = shmget(this_shm->options.shm_key, SHM_BUF_SIZE, IPC_CREAT | 0666)) < 0) {
+	if ((this_shm->shmid = shmget(this_shm->options.shm_key, this_shm->total_buffer_size, IPC_CREAT | 0666)) < 0) {
         perror("shmget");
         return NULL;
     }
@@ -68,8 +77,8 @@ void* shm_wrt_init(void *options){
 	/*allocate the memory for the pointer to semaphore operations*/
 	this_shm->sops = (struct sembuf *) malloc(sizeof(struct sembuf));
 	
-	/*give initial values to variables*/
-	this_shm->feature_vect_count = 0;
+	/*init current page id*/
+	this_shm->current_page = 0;
 	
 	/*return the pointer*/
 	return this_shm;
@@ -83,10 +92,11 @@ void* shm_wrt_init(void *options){
  * @param shm_interface, pointer to the shared memory output interface
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int shm_wrt_write_to_buf(void *feature_buf, void *shm_interface){
+int shm_wrt_write_to_buf(void *feature_vect_struct, void *shm_interface){
 	
 	/*cast/copy the pointers*/
-	data_t *data = (data_t *) feature_buf;
+	feature_buf_t *feat_vect = (feature_buf_t *) feature_vect_struct;
+	
 	shm_output_t *this_shm = (shm_output_t *)shm_interface;
 	
 	/*shared memory offset*/
@@ -102,13 +112,18 @@ int shm_wrt_write_to_buf(void *feature_buf, void *shm_interface){
 		/*yes, write a feature vector:*/
 		
 		/*-compute the write location*/
-		write_ptr = SAMPLE_SIZE*this_shm->feature_vect_count;
+		write_ptr = this_shm->page_size*this_shm->current_page;
 		
-		/*-write data*/
-		memcpy((void*)&(this_shm->shm_buf[write_ptr]),(void*)data->ptr, data->nb_data*sizeof(double));
+		/*-write frame information and move pointer*/
+		memcpy((void*)&(this_shm->shm_buf[write_ptr]),(void*)&(feat_vect->frame_status), sizeof(frame_info_t));
+		write_ptr+=sizeof(frame_info_t);
 		
-		/*the plan was to have 2 pages, but only one page is used at the present*/
-		this_shm->feature_vect_count = 0;
+		/*-write feature vector*/
+		memcpy((void*)&(this_shm->shm_buf[write_ptr]),(void*)feat_vect->featvect_ptr, feat_vect->nb_features*sizeof(double));
+		
+		/*update page*/
+		this_shm->current_page += 1;
+		this_shm->current_page %= this_shm->options.buffer_depth;
 		
 		/*-post the semaphore*/
 		this_shm->sops->sem_num = PREPROC_OUT_READY;

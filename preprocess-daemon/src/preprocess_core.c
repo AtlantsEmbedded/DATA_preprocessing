@@ -107,18 +107,21 @@ void cleanup_preprocess_core(){
 }
 
 /**
- * int preprocess_data(data_t* data_input, data_t* feature_output)
+ * int preprocess_data(data_t* data_input, feature_buf_t* feature_output)
  * @brief Transform the raw data into a feature vector, according to selected options
  * @param data_input(in), input buffer
  * @param feature_output(out), output buffer
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int preprocess_data(data_t* data_input, data_t* feature_output){
+int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 	
 	int i,j;
 	int offset = 0;
 	double* signals_array = (double*)data_input->ptr;
-	double* features_array = (double*)feature_output->ptr;
+	double* features_array = (double*)feature_output->featvect_ptr;
+	
+	/*re-init frame status*/
+	memset(&(feature_output->frame_status), 0, sizeof(frame_info_t));
 	
 	/*compute the average of each signal*/
 	stat_mean(signals_array, signals_avg_vector, nb_samples, nb_channels);
@@ -153,6 +156,9 @@ int preprocess_data(data_t* data_input, data_t* feature_output){
 	/*TODO: EEG power band:gamma*/
 	
 	/*TODO: Eye blink detection*/
+	if(0){
+		feature_output->frame_status.eye_blink_detected = 0x01;
+	}
 	
 	/*TODO: artifact detection*/
 	

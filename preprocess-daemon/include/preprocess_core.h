@@ -17,7 +17,7 @@
 int init_preprocess_core(appconfig_t *config);
 
 /*this function take the data and form the feature output*/
-int preprocess_data(data_t* data_input, data_t* feature_output);
+int preprocess_data(data_t* data_input, feature_buf_t* feature_output);
 
 /*clean up function*/
 void cleanup_preprocess_core();

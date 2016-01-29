@@ -32,7 +32,7 @@ static appconfig_t *config = NULL;
  * @brief Returns the appconfig
  * @return appconfig_t
  */
-inline appconfig_t *get_appconfig()
+appconfig_t *get_appconfig()
 {
 	return config;
 }
@@ -42,7 +42,7 @@ inline appconfig_t *get_appconfig()
  * @brief sets appconfig
  * @param config_obj
  */
-inline void set_appconfig(appconfig_t * config_obj)
+void set_appconfig(appconfig_t * config_obj)
 {
 	config = config_obj;
 }

@@ -11,12 +11,6 @@
  *        (...)
  */
 
-#define NB_FEATURES 220
-#define FEATURE_SIZE 8 
-#define SAMPLE_SIZE NB_FEATURES*FEATURE_SIZE 
-#define BUFFER_DEPTH 2 /*nb of samples in the buffer*/
-#define SHM_BUF_SIZE BUFFER_DEPTH*SAMPLE_SIZE
-
 /*this list must be shared between the following processes:
  * - DATA_interface
  * - DATA_preprocessing
@@ -38,18 +32,15 @@ typedef struct shm_output_options_s{
 	int shm_key;
 	int sem_key;
 	
-	/*feature vect optional content*/
-	unsigned char timeseries;
-	unsigned char fft;
-	unsigned char power_alpha;
-	unsigned char power_beta;
-	unsigned char power_gamma;
+	int frame_status_size;
+	int nb_features;
+	int buffer_depth;
 	
 }shm_output_options_t;
 
 
 void* shm_wrt_init(void *options);
-int shm_wrt_write_to_buf(void *feature_buf, void *shm_interface);
+int shm_wrt_write_to_buf(void *feature_vect_struct, void *shm_interface);
 int shm_wrt_cleanup(void* shm_interface);
 
 
