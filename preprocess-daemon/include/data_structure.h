@@ -1,14 +1,15 @@
 #ifndef DATA_STRUCTURE_H
 #define DATA_STRUCTURE_H
 
+#include <csv_file.h>
 /*
  * Structure describing the data input
  * buffer
  */
-typedef struct data_s {
-	unsigned char *ptr;
-	int nb_data;
-} data_t;
+//typedef struct data_s {
+//	unsigned char *ptr;
+//	int nb_data;
+//} data_t;
 
 /*
  * Structure describing the feature vector
