@@ -16,7 +16,7 @@
 
 /*eye blink detector defines*/
 #define COUNT_THRESHOLD 2
-#define SIGNAL_THRESHOLD -75
+#define SIGNAL_THRESHOLD -90
 #define CHAN_1 0
 #define CHAN_4 3
 #define EYE_BLINK_LENGTH_IN_SECONDS 0.45
