@@ -45,7 +45,6 @@ double* dft_vector = NULL;
 
 /*function required for preprocessing*/
 void remove_mean_col(double *a, double *mean, double *b, int dim_i, int dim_j);
-void abs_powerdft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop);
 void stat_mean(double *a, double *mean, int dim_i, int dim_j);
 void mtx_transpose(double *A, double *A_prime, int dim_i, int dim_j);
 void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop);
