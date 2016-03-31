@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <fft.h>
 
 #include "xml.h"
 #include "preprocess_core.h"
@@ -264,31 +265,7 @@ char has_eye_blink(const double *signal, int dim_i, int dim_j){
  * void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop)
  * @brief This should come from signal_proc_lib.so
  */
-void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop){
-	
-	int k;
-	int coef_idx = 0;
-	
-	/*loop through all coefficients*/
-	for (k = interval_start; k < interval_stop; k++) {
-		
-		/*computing registers*/
-		double sumreal = 0;
-		double sumimag = 0;
-		int t;
-		
-		/*compute each terms*/
-		for(t = 0; t < n; t++) {
-			double angle = -2*M_PI * ((long long)t * k % n) / n;
-			sumreal += signal[t]*cos(angle);
-			sumimag += signal[t]*sin(angle);
-		}
-		
-		/*compute 2*real value, to get abs fft*/
-		abs_power_interval[coef_idx] = 2*sqrt(sumreal*sumreal+sumimag*sumimag)/n;
-		coef_idx++;
-	}
-}  
+void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop);
 
 /**
  * void remove_mean_col(double *a, double *mean, double *b, int dim_i, int dim_j)
