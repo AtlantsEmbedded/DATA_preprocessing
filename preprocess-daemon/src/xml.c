@@ -23,7 +23,7 @@ const char *XML_app_elements[] =
 	  "window_width", "feature_dest",
 	  "rd_shm_key","wr_shm_key","sem_key", 
 	  "timeseries", "fft", "power_alpha", 
-	  "power_beta", "power_gamma"};
+	  "power_beta", "power_gamma","muse_eyeblink_detect"};
 
 static appconfig_t *config = NULL;
 
@@ -206,6 +206,21 @@ static int get_app_attributes(ezxml_t app_attribute, appconfig_t * app_info)
 	}else if (strncmp(tmp->txt, "FALSE", 5) == 0){
 		app_info->power_gamma = 0;
 	}	
+		
+	
+	/*Get appAttributes/muse_eyeblink_detect*/
+	tmp = ezxml_child(app_attribute, "muse_eyeblink_detect");
+	if (tmp == NULL) {
+		printf("appAttributes->muse_eyeblink_detect is missing\n");
+		return (-1);
+	}
+	/*interpret and turn to boolean value*/
+	if (strncmp(tmp->txt, "TRUE", 4) == 0){
+		app_info->muse_eyeblink_detect = 1;
+	}else if (strncmp(tmp->txt, "FALSE", 5) == 0){
+		app_info->muse_eyeblink_detect = 0;
+	}		
+		
 		
 	return (0);
 }

@@ -10,6 +10,7 @@
     <power_alpha>FALSE</power_alpha>
     <power_beta>FALSE</power_beta>
     <power_gamma>FALSE</power_gamma>
+    <muse_eyeblink_detect>TRUE</muse_eyeblink_detect>
     <feature_dest>SHM</feature_dest>
 	<rd_shm_key>5678</rd_shm_key>
 	<wr_shm_key>7804</wr_shm_key>

@@ -68,7 +68,7 @@ int init_preprocess_core(appconfig_t *config){
 	//to do describe sampling frequency
 	//eye_blink_length = ceil((double)config->sampling_freq*EYE_BLINK_LENGTH_IN_SECONDS);
 	eye_blink_length = 100;
-	eye_blink_detect = 0x01;
+	eye_blink_detect = config->muse_eyeblink_detect;
 	
 	/*adjust the size of the feature buffer according to selected options*/ 
 	/*timeseries*/
@@ -179,6 +179,8 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 	/*Eye blink detection*/
 	if(eye_blink_detect){
 		feature_output->frame_status.eye_blink_detected = has_eye_blink(signals_wo_avg,nb_samples,nb_channels);
+	}else{
+		feature_output->frame_status.eye_blink_detected = 0;
 	}
 	
 	/*TODO: artifact detection*/
