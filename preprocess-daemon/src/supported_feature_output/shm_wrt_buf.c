@@ -58,13 +58,13 @@ void* shm_wrt_init(void *options){
 		        
     /*initialise the shared memory array*/
 	if ((this_shm->shmid = shmget(this_shm->options.shm_key, this_shm->total_buffer_size, IPC_CREAT | 0666)) < 0) {
-        perror("shmget");
+        perror("Data preprocessing: error shmget");
         return NULL;
     }
     	
     /*Now we attach it to our data space*/
     if ((this_shm->shm_buf = shmat(this_shm->shmid, NULL, 0)) == (char *) -1) {
-        perror("shmat");
+        perror("Data preprocessing: error shmat");
         return NULL;
     }
     
