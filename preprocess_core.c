@@ -114,7 +114,7 @@ int init_preprocess_core(appconfig_t *config){
 	
 	/*sliding_window*/
 	if(config->sliding_window){
-		nb_samples= config->sub_sliding_window;
+		nb_samples= config->sliding_window;
 		sliding_window_enabled = 0x01;
 	}
 
@@ -203,8 +203,8 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 		for (i=0;i<nb_channels;i++){
 
 			/*Takes only in account the interval of data containing information about the alpha power*/
-			for(j=LOW_ALPHA_BAND*SAMPLING_TIME;j<HIGH_ALPHA_BAND*SAMPLING_TIME;j++){
-				alpha_power += features_array[i*nb_samples/2+j];
+			for(j=floor(LOW_ALPHA_BAND*SAMPLING_TIME);ceil(j<HIGH_ALPHA_BAND*SAMPLING_TIME);j++){
+				alpha_power += features_array[i*nb_samples/2+j+ offset];
 				
 			}
 			/*Copy to alpha power buffer*/
@@ -223,8 +223,8 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 		for (i=0;i<nb_channels;i++){
 
 			/*Takes only in account the interval of data containing information about the beta power*/
-			for(j=LOW_BETA_BAND*SAMPLING_TIME;j<HIGH_BETA_BAND*SAMPLING_TIME;j++){
-				beta_power += features_array[i*nb_samples/2+j];
+			for(j=floor(LOW_BETA_BAND*SAMPLING_TIME);j<ceil(HIGH_BETA_BAND*SAMPLING_TIME);j++){
+				beta_power += features_array[i*nb_samples/2+j+ offset];
 				
 			}
 			/*Copy to beta power buffer*/
@@ -243,8 +243,8 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 		for (i=0;i<nb_channels;i++){
 
 			/*Takes only in account the interval of data containing information about the gamma power*/
-			for(j=LOW_GAMMA_BAND*SAMPLING_TIME;j<HIGH_GAMMA_BAND*SAMPLING_TIME;j++){
-				gamma_power += features_array[i*nb_samples/2+j];
+			for(j=floor(LOW_GAMMA_BAND*SAMPLING_TIME);j<ceil(HIGH_GAMMA_BAND*SAMPLING_TIME);j++){
+				gamma_power += features_array[i*nb_samples/2+j+ offset];
 				
 			}
 			/*Copy to gamma power buffer*/

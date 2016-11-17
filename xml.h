@@ -40,7 +40,7 @@ typedef struct appconfig_s {
 	uint16_t power_gamma:1;
 	uint16_t muse_eyeblink_detect:1;
 	uint16_t sliding_window:1;
-	
+
 } appconfig_t;
 
 appconfig_t *xml_initialize(char *filename);
