@@ -40,7 +40,7 @@ typedef struct shm_output_options_s{
 
 
 void* shm_wrt_init(void *options);
-int shm_wrt_write_to_buf(void *feature_vect_struct, void *shm_interface);
+int shm_wrt_write_to_buf(void *shm_interface, void *feature_vect_struct);
 int shm_wrt_cleanup(void* shm_interface);
 
 

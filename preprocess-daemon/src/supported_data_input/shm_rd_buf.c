@@ -79,6 +79,23 @@ int shm_rd_init(void *param){
 	return EXIT_SUCCESS;
 }
 
+/**
+ * int shm_rd_request(void *param)
+ * @brief Open the buffers to catch a new sample
+ * @param param, reference to the feature input struct
+ * @return EXIT_FAILURE for unknown type, EXIT_SUCCESS for known/success
+ */
+int shm_rd_request(){
+	
+	/*open the buffer string*/
+	/*preprocessing opened*/
+	sops->sem_num = PREPROC_IN_READY;
+	sops->sem_op = 1; 
+	sops->sem_flg = IPC_NOWAIT;
+	semop(semid, sops, 1);
+    
+	return EXIT_SUCCESS;
+}
 
 /**
  * int shm_rd_read_from_buf(void *param)

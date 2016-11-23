@@ -47,6 +47,7 @@
 int shm_rd_init(void *param);
 int shm_rd_read_from_buf(void *param);
 int shm_rd_cleanup(void *param);
+int shm_rd_request();
 
 
 #endif

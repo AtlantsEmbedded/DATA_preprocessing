@@ -144,9 +144,12 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 	/*compute the average of each signal*/
 	stat_mean(signals_array, signals_avg_vector, nb_samples, nb_channels);
 	
-	/*remove the average of the signals*/
+	/*remove the average of the signals (DC component)*/
 	remove_mean_col(signals_array, signals_avg_vector, signals_wo_avg, nb_samples, nb_channels);
-	
+    
+	/*compute the average of each signal*/
+	stat_mean(signals_wo_avg, signals_avg_vector, nb_samples, nb_channels);
+    
 	/*transpose the signal array*/
 	mtx_transpose(signals_wo_avg, signals_transposed, nb_samples, nb_channels);
 	
@@ -165,7 +168,8 @@ int preprocess_data(data_t* data_input, feature_buf_t* feature_output){
 			
 			/*copy to output buffer*/
 			for(j=0;j<nb_samples/2;j++){
-				features_array[i*nb_samples/2+j + offset] = dft_vector[j];
+				features_array[i*nb_samples/2+ j + offset] = dft_vector[j];
+                
 			}
 		}
 	}
@@ -259,16 +263,6 @@ char has_eye_blink(const double *signal, int dim_i, int dim_j){
 	return 0x00;
 }
 
-
-
-
-
-/**
- * void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop)
- * @brief This should come from signal_proc_lib.so
- */
-void abs_dft_interval(const double *signal, double *abs_power_interval, int n, int interval_start, int interval_stop);
-
 /**
  * void remove_mean_col(double *a, double *mean, double *b, int dim_i, int dim_j)
  * @brief This should come from stats_lib.so
@@ -294,6 +288,10 @@ void stat_mean(double *a, double *mean, int dim_i, int dim_j){
 	int i,j,n;
 	n=0;
 	
+    for (j=0;j<dim_j;j++){
+        mean[j] = 0;
+    }
+    
 	/*Sum over each column*/
 	for(i=0;i<dim_i;i++){
 		 n = i*dim_j;

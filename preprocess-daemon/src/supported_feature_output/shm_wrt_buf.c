@@ -92,7 +92,7 @@ void* shm_wrt_init(void *options){
  * @param shm_interface, pointer to the shared memory output interface
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-int shm_wrt_write_to_buf(void *feature_vect_struct, void *shm_interface){
+int shm_wrt_write_to_buf(void *shm_interface, void *feature_vect_struct){
 	
 	/*cast/copy the pointers*/
 	feature_buf_t *feat_vect = (feature_buf_t *) feature_vect_struct;

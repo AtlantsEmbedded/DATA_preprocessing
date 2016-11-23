@@ -69,8 +69,7 @@ SOURCES       = src/main.c \
 				src/xml.c \
 				src/supported_data_input/fake_data_generator.c \
 				src/supported_data_input/shm_rd_buf.c \
-				src/supported_feature_output/shm_wrt_buf.c \
-				src/supported_feature_output/csv_file.c
+				src/supported_feature_output/shm_wrt_buf.c
 OBJECTS       = src/main.o \
 				src/data_input.o \
 				src/app_signal.o \
@@ -79,8 +78,7 @@ OBJECTS       = src/main.o \
 				src/xml.o \
 				src/supported_data_input/fake_data_generator.o \
 				src/supported_data_input/shm_rd_buf.o \
-				src/supported_feature_output/shm_wrt_buf.o \
-				src/supported_feature_output/csv_file.o
+				src/supported_feature_output/shm_wrt_buf.o
 DIST          = 
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = data_preprocessing
@@ -151,9 +149,6 @@ fake_data_generator.o: src/supported_data_input/fake_data_generator.c
 	
 shm_wrt_buf.o: src/supported_feature_output/shm_wrt_buf.c
 	$(CC) -c $(CFLAGS) $(INCPATH) -o fake_data_generator.o src/supported_feature_output/shm_wrt_buf.c 
-	
-csv_file.o: src/supported_feature_output/csv_file.c
-	$(CC) -c $(CFLAGS) $(INCPATH) -o csv_file.o src/supported_feature_output/csv_file.c 
 	
 ####### Install
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <appConfig>
   <appAttributes>
-    <debug>SHM</debug>
+    <debug>TRUE</debug>
     <data_source>SHM</data_source>
     <nb_channels>4</nb_channels>
     <window_width>110</window_width>
@@ -10,8 +10,8 @@
     <power_alpha>FALSE</power_alpha>
     <power_beta>FALSE</power_beta>
     <power_gamma>FALSE</power_gamma>
-    <muse_eyeblink_detect>TRUE</muse_eyeblink_detect>
-    <feature_dest>SHM</feature_dest>
+    <muse_eyeblink_detect>FALSE</muse_eyeblink_detect>
+    <feature_dest>CSV</feature_dest>
 	<rd_shm_key>5678</rd_shm_key>
 	<wr_shm_key>7804</wr_shm_key>
 	<sem_key>1234</sem_key>

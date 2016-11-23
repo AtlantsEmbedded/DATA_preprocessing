@@ -7,6 +7,9 @@
 		
 #define READ_DATA_FC(param) \
 		_READ_DATA_FC(param)
+        
+#define REQUEST_FEAT_FC() \
+		_REQUEST_FEAT_FC(NULL)
 		
 #define TERMINATE_DATA_INPUT_FC() \
 		_TERMINATE_DATA_INPUT_FC(NULL)
@@ -14,6 +17,7 @@
 typedef int (*functionPtr_t) (void *);
 functionPtr_t _INIT_DATA_INPUT_FC;
 functionPtr_t _READ_DATA_FC;
+functionPtr_t _REQUEST_FEAT_FC;
 functionPtr_t _TERMINATE_DATA_INPUT_FC;
 
 typedef struct data_input_options_s{

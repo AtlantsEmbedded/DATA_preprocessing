@@ -23,6 +23,7 @@
 #include "data_input.h"
 #include "feature_output.h"
 #include "shm_wrt_buf.h"
+#include <csv_file.h>
 
 #include "xml.h"
 #include "preprocess_core.h"
@@ -106,7 +107,9 @@ int main(int argc, char **argv)
 	/*Program loop*/
 	for(;;)
 	{
-		
+        if(config->feature_dest == CSV_OUTPUT && NULL != _REQUEST_FEAT_FC){
+            REQUEST_FEAT_FC();
+        }
 		/*read data*/
 		if(READ_DATA_FC(&data_input_buf)==EXIT_SUCCESS){
 			
@@ -117,7 +120,7 @@ int main(int argc, char **argv)
 			for(i=0;i<output_interface_array.nb_output;i++){
 				
 				/*write feature vector*/
-				WRITE_FEATURE_FC(&feature_output_buf, output_interface_array.output_interface[i]);
+				WRITE_FEATURE_FC(output_interface_array.output_interface[i], &feature_output_buf);
 			}
 			
 		}else{
@@ -239,26 +242,49 @@ int init_feat_output_array_interface(){
 		printf("Error initializing feature output:\n App buffers need to be initialized first\n");
 		return EXIT_FAILURE;
 	}
-
-	/*define the feature output options, from the config*/
-	shm_output_options_t shm_output_opt[1];
-	/*shared memory buffer configuration*/
-	shm_output_opt[0].shm_key = config->wr_shm_key;
-	shm_output_opt[0].sem_key = config->sem_key;
-	shm_output_opt[0].frame_status_size = sizeof(frame_info_t);
-	shm_output_opt[0].nb_features = feature_output_buf.nb_features;
-	shm_output_opt[0].buffer_depth = 2; /*this should be added to the xml config*/
-	
-	/*allocate the memory for all output interfaces*/
-	output_interface_array.nb_output = 1;
-	output_interface_array.output_interface = malloc(sizeof(void*)*output_interface_array.nb_output);
-	output_interface_array.output_interface[0] = init_feature_output(config->feature_dest,&shm_output_opt);
-	
-	/*Initialize feature output interfaces*/
-	if(output_interface_array.output_interface[0]==NULL){
-		printf("Error initializing feature output:\n Couldn't init output interface\n");
-		return EXIT_FAILURE;
-	}	
+    
+    if(config->feature_dest == SHM_OUTPUT){
+        /*define the feature output options, from the config*/
+        shm_output_options_t shm_output_opt[1];
+        /*shared memory buffer configuration*/
+        shm_output_opt[0].shm_key = config->wr_shm_key;
+        shm_output_opt[0].sem_key = config->sem_key;
+        shm_output_opt[0].frame_status_size = sizeof(frame_info_t);
+        shm_output_opt[0].nb_features = feature_output_buf.nb_features;
+        shm_output_opt[0].buffer_depth = 2; /*this should be added to the xml config*/
+        
+        /*allocate the memory for all output interfaces*/
+        output_interface_array.nb_output = 1;
+        output_interface_array.output_interface = malloc(sizeof(void*)*output_interface_array.nb_output);
+        output_interface_array.output_interface[0] = init_feature_output(config->feature_dest,&shm_output_opt);
+        
+        /*Initialize feature output interfaces*/
+        if(output_interface_array.output_interface[0]==NULL){
+            printf("Error initializing feature output:\n Couldn't init output interface\n");
+            return EXIT_FAILURE;
+        }	
+        
+    }else if(config->feature_dest == CSV_OUTPUT){
+        
+        /*define the feature output options, from the config*/
+        csv_output_options_t csv_output_opt[1];
+        /*shared memory buffer configuration*/
+        strncpy(csv_output_opt[0].filename, "features.dat", 200);
+        csv_output_opt[0].nb_data_channels = feature_output_buf.nb_features;
+        csv_output_opt[0].data_type = DOUBLE_DATA;
+        
+        /*allocate the memory for all output interfaces*/
+        output_interface_array.nb_output = 1;
+        output_interface_array.output_interface = malloc(sizeof(void*)*output_interface_array.nb_output);
+        output_interface_array.output_interface[0] = init_feature_output(config->feature_dest,&csv_output_opt);
+        
+        /*Initialize feature output interfaces*/
+        if(output_interface_array.output_interface[0]==NULL){
+            printf("Error initializing feature output:\n Couldn't init output interface\n");
+            return EXIT_FAILURE;
+        }	
+        
+    }
 	
 	return EXIT_SUCCESS;
 }

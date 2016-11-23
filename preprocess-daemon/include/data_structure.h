@@ -2,14 +2,6 @@
 #define DATA_STRUCTURE_H
 
 #include <csv_file.h>
-/*
- * Structure describing the data input
- * buffer
- */
-//typedef struct data_s {
-//	unsigned char *ptr;
-//	int nb_data;
-//} data_t;
 
 /*
  * Structure describing the feature vector
@@ -23,13 +15,13 @@ typedef struct frame_info_s{
 
 /*
  * Structure describing the feature vector 
- * it is preceded by a frame_status and
+ * it is terminated by a frame_status and
  * the actual feature vector
  */
 typedef struct feature_buf_s {
-	frame_info_t frame_status;
 	int nb_features;
 	unsigned char *featvect_ptr;
+	frame_info_t frame_status; // note this field is not supported by the CSV, yet
 } feature_buf_t;
 
 

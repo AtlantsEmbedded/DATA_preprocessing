@@ -26,11 +26,13 @@ int init_data_input(char input_type, data_input_options_t options){
 	_INIT_DATA_INPUT_FC = NULL;
 	_READ_DATA_FC = NULL;
 	_TERMINATE_DATA_INPUT_FC = NULL;
+    _REQUEST_FEAT_FC = NULL;
 		
 	/*shared memory input*/
 	if(input_type == SHM_INPUT) {
 		_INIT_DATA_INPUT_FC = &shm_rd_init;
 		_READ_DATA_FC = &shm_rd_read_from_buf;
+		_REQUEST_FEAT_FC = &shm_rd_request;
 		_TERMINATE_DATA_INPUT_FC = &shm_rd_cleanup;
 	}
 	/*fake signal input*/
